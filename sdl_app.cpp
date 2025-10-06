@@ -18,6 +18,7 @@ SDL_AppResult SDL_AppIterate(void *unused_appstate)
    SDL_SetRenderDrawColor(as.renderer, 200, 111, 111, SDL_ALPHA_OPAQUE);
    SDL_RenderClear(as.renderer);
    as.board.draw();
+   as.score.draw();
    SDL_RenderPresent(as.renderer);
    return SDL_APP_CONTINUE;
 }
