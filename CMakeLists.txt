@@ -46,8 +46,8 @@ link_directories(${CMAKE_BINARY_DIR})
 CPMAddPackage(
   NAME SDL3
   GITHUB_REPOSITORY libsdl-org/SDL
-  GIT_TAG release-3.2.22 
-  VERSION 3.2.22
+  GIT_TAG release-3.2.24 
+  VERSION 3.2.24
 )
 
 set(CMAKE_CXX_STANDARD 17)

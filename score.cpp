@@ -11,11 +11,19 @@ void Score::deinit() {
 
 void Score::init() {
    SDL_Surface *digit_surface = SDL_LoadBMP("digits.bmp");
+   if (!digit_surface) {
+      fprintf(stderr, "%s\n", SDL_GetError());
+      exit(EXIT_FAILURE);
+   }
    this->digit_tex = SDL_CreateTextureFromSurface(
       as.renderer,
       digit_surface);
+   if (!this->digit_tex) {
+      fprintf(stderr, "%s\n", SDL_GetError());
+      exit(EXIT_FAILURE);
+   }
    SDL_DestroySurface(digit_surface);
-   this->value = 1;
+   this->value = 0;
 }
 
 inline int numOfDigits(int a) {
@@ -26,8 +34,8 @@ void Score::draw() {
    auto r = this->value;
 
    SDL_FRect dstrect[] = {{
-      .x =
-         This::x0 + This::digit_width * (numOfDigits(this->value) - 1),
+      .x = (float)
+         (This::x0 + This::digit_width * (numOfDigits(this->value) - 1)),
       .y = This::y,
       .w = This::digit_width,
       .h = This::digit_height }};
@@ -38,14 +46,11 @@ void Score::draw() {
       r /= 10, dstrect->x -= This::digit_width)
    {
       SDL_FRect srcrect[] = {{
-         .x = This::digit_width * (r % 10),
+         .x = (float) (This::digit_width * (r % 10)),
          .y = 0,
          .w = This::digit_width,
          .h = This::digit_height,
       }};
-      fprintf(stderr,
-              "src(.x=%5.1f) -> dst(.x=%5.1f)\n",
-              srcrect->x, dstrect->x);
 
       // draw a digit
       SDL_RenderTexture(
@@ -54,7 +59,6 @@ void Score::draw() {
          srcrect,
          dstrect);
    }
-   fprintf(stderr, "\n");
 
 /*   
    for (auto i = num_digits - 1; r != 0; i -= 1, r /= 10) {

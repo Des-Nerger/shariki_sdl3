@@ -230,20 +230,34 @@ void This::handleIfMatch(std::array<int, 2> ij) {
       rightmost_j += 1;
 
    if (downmost_i - upmost_i + 1 >= 3)
-      for (auto i = upmost_i; i <= downmost_i; i++)
-         as.board.board[i][ij[1]].color = {
-            .r = This::bg_color[0],
-            .g = This::bg_color[1],
-            .b = This::bg_color[2]
-         };
+      for (auto i = upmost_i; i <= downmost_i; i++) {
+         auto &color = as.board.board[i][ij[1]].color;
+         if (!(color.r == This::bg_color[0] &&
+               color.g == This::bg_color[1] &&
+               color.b == This::bg_color[2])) {
+            color = {
+               .r = This::bg_color[0],
+               .g = This::bg_color[1],
+               .b = This::bg_color[2]
+            };
+            as.score.value += 5;
+         }
+      }
 
    if (rightmost_j - leftmost_j + 1 >= 3)
-      for (auto j = leftmost_j; j <= rightmost_j; j++)
-         as.board.board[ij[0]][j].color = {
-            .r = This::bg_color[0],
-            .g = This::bg_color[1],
-            .b = This::bg_color[2]
-         };
+      for (auto j = leftmost_j; j <= rightmost_j; j++) {
+         auto &color = as.board.board[ij[0]][j].color;
+         if (!(color.r == This::bg_color[0] &&
+               color.g == This::bg_color[1] &&
+               color.b == This::bg_color[2])) {
+            color = {
+               .r = This::bg_color[0],
+               .g = This::bg_color[1],
+               .b = This::bg_color[2]
+            };
+            as.score.value += 5;
+         }
+      }
 
    // fprintf(stderr, "(%d, %d): %d %d %d %d\n",
    //   ij[0], ij[1], leftmost_j, downmost_i, upmost_i, rightmost_j);
