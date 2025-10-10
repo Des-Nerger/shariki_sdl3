@@ -36,5 +36,5 @@ struct Board {
    void deinit();
    ~Board() = default;
 
-   void handleIfMatch(std::array<int, 2> ij);
+   bool handleIfMatch(std::array<int, 2> ij);
 };

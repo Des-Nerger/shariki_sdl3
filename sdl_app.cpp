@@ -19,6 +19,7 @@ SDL_AppResult SDL_AppIterate(void *unused_appstate)
    SDL_RenderClear(as.renderer);
    as.board.draw();
    as.score.draw();
+   
    SDL_RenderPresent(as.renderer);
    return SDL_APP_CONTINUE;
 }
@@ -46,6 +47,8 @@ SDL_AppResult SDL_AppInit(
 
    as.board.init();
    as.score.init();
+   as.mode = MODE_PROCESSING_PLAYER_INPUT;
+   as.falling_column_idx = -1;
 
    return SDL_APP_CONTINUE;
 }
@@ -65,6 +68,7 @@ SDL_AppResult SDL_AppEvent(void *unused_appstate, SDL_Event *event)
       }
       return SDL_APP_CONTINUE;
    case SDL_EVENT_MOUSE_BUTTON_DOWN:
+      if (as.mode != MODE_PROCESSING_PLAYER_INPUT) break;
       {
          auto &mouse_button = event->button; // mouse
          std::array<int, 2> selected_ij = {
@@ -84,12 +88,22 @@ SDL_AppResult SDL_AppEvent(void *unused_appstate, SDL_Event *event)
                abs(as.board.selected_ij[1] - selected_ij[1]) == 1
             ) {
                std::swap(
-                  as.board.board[selected_ij[0]][selected_ij[1]].color,
+                  as.board.board
+                     [selected_ij[0]]
+                     [selected_ij[1]].color,
                   as.board.board
                      [as.board.selected_ij[0]]
                      [as.board.selected_ij[1]].color);
-               as.board.handleIfMatch({selected_ij});
-               as.board.handleIfMatch({as.board.selected_ij});
+               if (!as.board.handleIfMatch({selected_ij}) &&
+                   !as.board.handleIfMatch({as.board.selected_ij}))
+                  std::swap(
+                     as.board.board
+                        [selected_ij[0]]
+                        [selected_ij[1]].color,
+                     as.board.board
+                        [as.board.selected_ij[0]]
+                        [as.board.selected_ij[1]].color);
+               else as.mode = MODE_FALLING;
                as.board.selected_ij = {-1, -1};
             } else as.board.selected_ij = selected_ij;
          }

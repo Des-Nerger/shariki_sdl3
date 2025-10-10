@@ -208,7 +208,7 @@ void This::draw() {
    }
 }
 
-void This::handleIfMatch(std::array<int, 2> ij) {
+bool This::handleIfMatch(std::array<int, 2> ij) {
    const auto color = as.board.board[ij[0]][ij[1]].color;
 
    auto upmost_i = ij[0];
@@ -229,6 +229,8 @@ void This::handleIfMatch(std::array<int, 2> ij) {
           as.board.board[ij[0]][rightmost_j + 1].color == color)
       rightmost_j += 1;
 
+   auto is_match = false;
+
    if (downmost_i - upmost_i + 1 >= 3)
       for (auto i = upmost_i; i <= downmost_i; i++) {
          auto &color = as.board.board[i][ij[1]].color;
@@ -241,6 +243,7 @@ void This::handleIfMatch(std::array<int, 2> ij) {
                .b = This::bg_color[2]
             };
             as.score.value += 5;
+            is_match = true;
          }
       }
 
@@ -256,8 +259,11 @@ void This::handleIfMatch(std::array<int, 2> ij) {
                .b = This::bg_color[2]
             };
             as.score.value += 5;
+            is_match = true;
          }
       }
+
+   return is_match;
 
    // fprintf(stderr, "(%d, %d): %d %d %d %d\n",
    //   ij[0], ij[1], leftmost_j, downmost_i, upmost_i, rightmost_j);
